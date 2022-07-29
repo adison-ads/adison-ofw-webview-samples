@@ -3,14 +3,14 @@
 <head>
     <link rel="shortcut icon" href="#">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://storage.adison.co/resources/adison-offerwall-js-sdk/0.1.0-beta1/adison-offerwall-sdk.js"></script>
+    <script src="https://storage.adison.co/resources/adison-offerwall-web-sdk/0.1.0-alpha7/adison-offerwall-sdk.js"></script>
     <script>
         var debug = true
         if (debug == true) {  // 개발 환경
             Adison.Ofw.init({
                 mode: 'development',
-                android: 'f7Pq9yXSooZPHRLv9M5rXQhG',
-                ios: 'SFEyJwarfNQGKK4zFrPYQ1nb'
+                android: '0f0e8aa4a8aebcbb9f7dbe74',
+                ios: 'a7c9b9c79e114a2fd085f60f'
             });
         } else {  // 실제 환경
             Adison.Ofw.init({
@@ -22,7 +22,7 @@
         document.addEventListener("DOMContentLoaded", function(){
             Adison.Ofw.loadAds({
                 inventory: "trend_tab",
-                tags: ['shop', 'fashion']
+                tags: [ 'fashion' ]                
             }, size=5)
                 .then((ads) => {
                     console.log(ads.length + ' ads are loaded!');
