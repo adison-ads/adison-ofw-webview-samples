@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <!--    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>-->
+    <script src="https://storage.adison.co/resources/adison-offerwall-webview-sdk/0.9.0-beta1/adison-offerwall-sdk.js"></script>
+    <script>
+        var debug = true
+        if (debug == true) {  // 개발 환경
+            Adison.Ofw.init({
+                mode: 'development',
+                android: 'e62eaa2a4a3bf7666673899b',
+                ios: '99a9e63ffe830190bb0baf16'
+            });
+        } else {  // 실제 환경
+            Adison.Ofw.init({
+                android: 'be68407b4a90ac25eb56a7bf',
+                ios: '5d5e64d75c43570be991d650'
+            });
+        }
+
+        var currentPage = 1
+
+        document.addEventListener("DOMContentLoaded", function(){
+            Adison.Ofw.loadAds({
+                // inventory: "trend_tab",
+                // tags: ['cat_entertainment' ],
+                pagination: true
+            }, size=20, page=currentPage)
+                .then((ads) => {
+                    console.log(ads.length + ' ads are loaded!');
+                    ads.forEach(ad =>
+                        addItem(ad)
+                    );
+                    // if (ads.length > 0) {
+                        currentPage += 1
+                    // }
+                }).catch((e) => {
+                console.error('An error is detected while loading ad: ' + e.message);
+            })
+        });
+
+        function addItem(ad) {
+            let li = document.createElement("li");
+            li.innerText = ad.id + " / " + ad.title + " / " + ad.subtitle + " / " + ad.reward + " / " + ad.inventory
+            li.append(document.createElement("br"))
+            let dt = document.createElement("img")
+            dt.src = ad.icon_image
+            dt.width = 40
+            // dt.src = ad.thumb_image
+            li.append(dt)
+            document
+                .getElementById('list-group')
+                .appendChild(li);
+            Adison.Ofw.registerNativeAd(ad, li);
+        }
+
+        function showOfferwall() {
+            Adison.Ofw.showOfferwall();
+        }
+
+        function showHelp() {
+            Adison.Ofw.showHelp();
+        }
+
+        function loadMore() {
+            Adison.Ofw.loadAds({
+                // inventory: "trend_tab",
+                // tags: ['cat_entertainment' ]
+                pagination: true
+            }, size=20, page=currentPage)
+                .then((ads) => {
+                    console.log(ads.length + ' ads are loaded!');
+                    ads.forEach(ad =>
+                        addItem(ad)
+                    );
+                    // if (ads.length > 0) {
+                        currentPage += 1
+                    // }
+                }).catch((e) => {
+                console.error('An error is detected while loading ad: ' + e.message);
+            })
+        }
+
+    </script>
+    <style>
+        #app {
+            max-width: 768px;
+            margin: 0 auto;
+        }
+
+        header {
+            height: 63px;
+        }
+        .header-inner {
+            position: fixed;
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+            background-color: #ffffff;
+            height: 63px;
+            width: 100%;
+            max-width: 768px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0px;
+        }
+        li {
+            list-style: none;
+        }
+
+        .title {
+            font-family: AppleSDGothicNeo;
+            font-size: 20px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: -0.6px;
+            text-align: center;
+            color: #000000;
+            padding: 22px 0 17px;
+
+        }
+
+        .list-group {
+            padding: 24px;
+            background-color: #efefef;
+        }
+
+        .test-buttons {
+            margin-top: 24px;
+            height: 24px;
+        }
+
+        .thumb {
+            width: 128px;
+            height: 128px;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            flex: 0;
+        }
+
+        .list-item {
+            border-radius: 8px;
+            background-color: #ffffff;
+            height: 128px;
+            display: flex;
+            cursor: pointer;
+
+            /*  & + .list-item {*/
+            /*    margin-top: 12px;*/
+            /*} */
+        }
+    </style>
+</head>
+<body>
+<div id='content'>
+    <div id="app">
+        <header class="header">
+            <div class="header-inner">
+                <h1 class="title">오퍼월 테스트 LOCAL</h1>
+            </div>
+        </header>
+        <div style="margin-top: 24px">
+            <div class="subtitle">적립 가능 금액 : <span id="reward"></span></div>
+        </div>
+        <div class="test-buttons">
+            <div onclick="showOfferwall()" style="float: right">전체보기 ></div>
+            <div onclick="showHelp()" style="float: left">문의하기</div>
+        </div>
+        <div class="adison-ofw">
+            <ul class="list-group" id="list-group">
+                <li class="list-item" style="display: none;">
+                    <div style="display: flex">
+                        <img class="thumb" :src="item.thumbImage" />
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="flex: 1">{{ item.title }}</div>
+                            <div style="flex: 1">{{ item.subtitle }}</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div style="margin-top: 24px">
+            <button onclick="loadMore()"> 로드 </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
